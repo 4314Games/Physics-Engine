@@ -1,4 +1,5 @@
 #pragma once
+#include "Intersect.h"
 
 namespace Physics
 {
@@ -17,6 +18,8 @@ namespace Physics
 			OBB
 		};
 
+		
+
 		Collider(Type type);
 		virtual ~Collider();
 
@@ -24,12 +27,12 @@ namespace Physics
 
 		virtual void Transform(PhysicsObject* p_object) {};
 
-		virtual bool Intersects(Collider* other) const { return false;	};
+		virtual bool Intersects(Collider* other, IntersectData* info) const { return false;	};
 
 		//Static functio now matter how many colliders are created
 		static Collider* GetNullInstance();
 
-		static bool SPhereToSphereIntersect(const SphereCollider *objA, const SphereCollider *objB);
+		static bool SPhereToSphereIntersect(const SphereCollider *objA, const SphereCollider *objB, IntersectData * intersect);
 
 	protected:
 		Type m_type;

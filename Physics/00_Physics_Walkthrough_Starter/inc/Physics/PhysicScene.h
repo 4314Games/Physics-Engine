@@ -4,10 +4,12 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <vector>
+#include "Intersect.h"
 
 namespace Physics
 {
 	class PhysicsObject;
+	class Constraint;
 
 	class PhysicScene
 	{
@@ -18,7 +20,7 @@ namespace Physics
 			PhysicsObject* objA;
 			PhysicsObject* objB;
 
-
+			IntersectData intersect;
 		};
 
 		PhysicScene();
@@ -39,13 +41,21 @@ namespace Physics
 
 		bool isObjectColliding(PhysicsObject* obj);
 
+		void AttachConstraint(Constraint * con);
+		void RemoveConstraint(Constraint * con);
+		const std::vector<Constraint *> & GetConstraints() const;
+
 	protected:
 		std::vector<PhysicsObject *> m_object;
+		std::vector<Constraint *> m_constraints;
 		glm::vec3 m_globalForce;
 
 		void DetectCollision();
+		void ResolveCollision();
 		std::vector<CollisionInfo> m_collision;
+
 		std::map<PhysicsObject*, bool> m_isColidingLookUp;
+		glm::vec3 gravAccel = glm::vec3(0.0f, -9.8f, 0.0f);
 
 	private:
 		

@@ -15,12 +15,12 @@ namespace Physics
 	{
 	}
 
-	bool SphereCollider::Intersects(Collider * other) const
+	bool SphereCollider::Intersects(Collider * other, IntersectData * intersect) const
 	{
 		switch (other->GetType())
 		{
 		case Type::SPHERE:
-			return SPhereToSphereIntersect(this, (SphereCollider*)other);		
+			return SPhereToSphereIntersect(this, (SphereCollider*)other, intersect);		
 		}
 		return false;
 	}

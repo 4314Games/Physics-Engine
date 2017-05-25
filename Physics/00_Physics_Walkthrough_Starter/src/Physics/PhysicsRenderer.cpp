@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include "Physics\Collider.h"
 #include "Physics\SphereCollider.h"
-
+#include "Physics\Constraint.h"
 namespace Physics
 {
 
@@ -44,6 +44,14 @@ namespace Physics
 				aie::Gizmos::addSphere(obj->GetPos(), ((SphereCollider*)obj->GetCollider())->GetRadius(), 5, 5, info->color);
 			}			
 		}
+
+		for (auto iter = p_scene->GetConstraints().begin(); iter != p_scene->GetConstraints().end(); iter++)
+		{
+			switch ((*iter)->GetType())
+				case Constraint::Type::SPRING:
+					aie::Gizmos::addLine((*iter)->GetObjects()[0]->GetPos(), (*iter)->GetObjects()[1]->GetPos(), glm::vec4(1, 0, 0, 1));		
+		}
+
 	}
 
 	PhysicsRenderer::RenderInfo * Physics::PhysicsRenderer::GetRenderInfro(PhysicsObject * p_object)

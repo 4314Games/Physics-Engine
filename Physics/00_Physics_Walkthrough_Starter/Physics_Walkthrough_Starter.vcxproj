@@ -92,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Physics\Constraint.cpp" />
     <ClCompile Include="src\Physics\SphereCollider.cpp" />
     <ClCompile Include="src\Physics\Collider.cpp" />
     <ClCompile Include="src\Physics\PhysicsRenderer.cpp" />
@@ -100,15 +101,19 @@
     <ClCompile Include="src\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\Physics_Walkthrough_App.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Physics\Spring.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Physics\Constraint.h" />
     <ClInclude Include="inc\Physics\Collider.h" />
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\Physics\PhysicsObject.h" />
+    <ClInclude Include="inc\Physics\Spring.h" />
     <ClInclude Include="inc\Physics_Walkthrough_App.h" />
     <ClInclude Include="inc\Physics\PhysicScene.h" />
     <ClInclude Include="inc\Physics\PhysicsRenderer.h" />
     <ClInclude Include="inc\Physics\SphereCollider.h" />
+    <ClInclude Include="inc\Physics\Intersect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,7 +20,7 @@ namespace Physics
 		void SetPosition(const glm::vec3 & p_position) { m_position = p_position; }
 		void SetRadius(float p_radius) { m_radius = p_radius; }
 
-		bool Intersects(Collider* other) const;
+		bool Intersects(Collider* other, IntersectData * intersect) const;
 
 		virtual void Transform(PhysicsObject *p_obj);
 

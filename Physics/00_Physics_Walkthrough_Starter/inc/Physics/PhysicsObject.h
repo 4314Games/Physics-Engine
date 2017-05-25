@@ -25,6 +25,7 @@ namespace Physics
 		const float GetMass() const	{ return m_mass; }
 		const float GetFriction() const	{ return m_friction; }
 		Collider* GetCollider();
+		const float GetBounciness() const { return m_bounciness; }
 
 		void SetPos(const glm::vec3 &p_pos) { m_position = p_pos; }
 		void SetVelocty(const glm::vec3 &p_velocity) { m_velocity = p_velocity; }
@@ -32,6 +33,7 @@ namespace Physics
 		void SetMass(float p_mass) { m_mass = p_mass;	}
 		void SetFriction(float p_friction) { m_friction = p_friction; }
 		void SetCollider(Collider* p_collider);
+		void SetBounciness(float b) { m_bounciness = b; }
 
 	protected:
 		glm::vec3 m_position;
@@ -39,7 +41,8 @@ namespace Physics
 		glm::vec3 m_acceleration;
 		float m_mass = 1.0f;
 		float m_friction = 1.0f;
-	
+		float m_bounciness = 1.0f;
+
 		Collider *m_collider = nullptr;
 	};
 }

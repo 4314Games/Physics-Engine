@@ -22,6 +22,8 @@ public:
 	float GetPitch();
 	float GetRoll();
 
+	glm::vec3 GetFront() { return m_cameraFront; }
+
 	glm::mat4& GetView();
 	glm::mat4& GetProjection();
 	glm::mat4 GetProjectionView();
