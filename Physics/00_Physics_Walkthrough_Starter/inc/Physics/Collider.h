@@ -5,7 +5,7 @@ namespace Physics
 {
 	class PhysicsObject;
 	class SphereCollider;
-
+	class AABB;
 	class Collider
 	{
 	public:
@@ -33,7 +33,7 @@ namespace Physics
 		static Collider* GetNullInstance();
 
 		static bool SPhereToSphereIntersect(const SphereCollider *objA, const SphereCollider *objB, IntersectData * intersect);
-
+		static bool AABBIntersects( AABB * objA,  AABB * objB, IntersectData * intersect);
 	protected:
 		Type m_type;
 

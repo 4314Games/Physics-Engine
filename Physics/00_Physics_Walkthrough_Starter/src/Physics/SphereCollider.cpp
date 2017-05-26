@@ -20,7 +20,7 @@ namespace Physics
 		switch (other->GetType())
 		{
 		case Type::SPHERE:
-			return SPhereToSphereIntersect(this, (SphereCollider*)other, intersect);		
+			return SPhereToSphereIntersect(this, (SphereCollider*)other, intersect);
 		}
 		return false;
 	}

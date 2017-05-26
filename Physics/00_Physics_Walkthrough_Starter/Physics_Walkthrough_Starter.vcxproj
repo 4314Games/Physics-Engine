@@ -92,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Physics\AABB.cpp" />
     <ClCompile Include="src\Physics\Constraint.cpp" />
     <ClCompile Include="src\Physics\SphereCollider.cpp" />
     <ClCompile Include="src\Physics\Collider.cpp" />
@@ -104,6 +105,7 @@
     <ClCompile Include="src\Physics\Spring.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Physics\AABB.h" />
     <ClInclude Include="inc\Physics\Constraint.h" />
     <ClInclude Include="inc\Physics\Collider.h" />
     <ClInclude Include="inc\Camera.h" />

@@ -1,12 +1,17 @@
 #include "Physics_Walkthrough_App.h"
 #include "Physics\PhysicsRenderer.h"
-#include "Gizmos.h"
-#include "Input.h"
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
-#include "Camera.h"
 #include "Physics\SphereCollider.h"
 #include "Physics\Spring.h"
+#include "Physics\AABB.h"
+
+#include "Gizmos.h"
+#include "Input.h"
+#include "Camera.h"
+
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <imgui.h>
+
 
 Physics_Walkthrough_App::Physics_Walkthrough_App()
 {
@@ -52,45 +57,14 @@ bool Physics_Walkthrough_App::startup()
 			}
 		}
 	}*/
-
-	/*Physics::PhysicsObject *left = new Physics::PhysicsObject();
-	left->SetPos(glm::vec3(-5,1 , 0));
-	left->SetCollider(new Physics::SphereCollider(1.0f));
-	m_scene->AttachObject(left);
-
-	Physics::PhysicsObject *right = new Physics::PhysicsObject();
-	right->SetPos(glm::vec3(5, 1, 0));
-	right->SetCollider(new Physics::SphereCollider(1.0f));
-	m_scene->AttachObject(right);
 	
-	Physics::PhysicsObject *top = new Physics::PhysicsObject();
-	top->SetPos(glm::vec3(0, 1, 5));
-	top->SetCollider(new Physics::SphereCollider(1.0f));
-	m_scene->AttachObject(top);
-
-	Physics::PhysicsObject *bottom = new Physics::PhysicsObject();
-	bottom->SetPos(glm::vec3(0, 1, -5));
-	bottom->SetCollider(new Physics::SphereCollider(1.0f));
-	m_scene->AttachObject(bottom);
-
-	Physics::Spring *spring = new Physics::Spring(left, right, 7, 200, 1);
-	m_scene->AttachConstraint(spring);
-
-	Physics::Spring *spring2 = new Physics::Spring(left, bottom, 7, 200, 1);
-	m_scene->AttachConstraint(spring2);
-
-
-	Physics::Spring *spring3 = new Physics::Spring(bottom, bottom, 7, 200, 1);
-	m_scene->AttachConstraint(spring3);*/
-
-	
-
 	const int maxX = 3;
 	const int maxY = 3;
 	const int maxZ = 3;
 	Physics::PhysicsObject* blob[maxX][maxY][maxZ];
 
-	for (int x = 0; x < maxX; x++)	//Do Height Last
+	//Add spheres to scene
+	for (int x = 0; x < maxX; x++)	
 	{
 		for (int y = 0; y < maxY; y++)
 		{
@@ -105,70 +79,82 @@ bool Physics_Walkthrough_App::startup()
 		}
 	}
 
+	//Add and connect springs
+	float stiffness = 150;
 	for (int x = 0; x < maxX; x++)
 	{
 		for (int y = 0; y < maxY; y++)
 		{
 			for (int z = 0; z < maxZ; z++)
 			{
-				if (y < 2)	//Up
+				if (y < maxY-1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x][y + 1][z], 1, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x][y + 1][z], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring); 
 				}
-				if (x < 2)	//Right
+				if (x < maxX - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y][z], 1, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y][z],2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (z < 2)	//Left
+				if (z < maxZ - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x][y][z + 1], 1, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x][y][z + 1], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (z < 2 && x < 2)
+				if (z < maxZ - 1 && x < maxX - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y][z + 1], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y][z + 1], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (z < 2 && x < 2)
+				if (z < maxZ - 1 && x < maxX - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z + 1], blob[x + 1][y][z], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z + 1], blob[x + 1][y][z], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (z < 2 && y < 2)
+				if (z < maxZ - 1 && y < maxY - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x][y + 1][z + 1], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x][y + 1][z + 1], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (z < 2 && y < 2)
+				if (z < maxZ - 1 && y < maxY - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y + 1][z], blob[x][y][z + 1], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y + 1][z], blob[x][y][z + 1], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (x < 2 && y < 2)
+				if (x < maxX - 1 && y < maxY - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y + 1][z], blob[x + 1][y][z], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y + 1][z], blob[x + 1][y][z], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (x < 2 && y < 2)
+				if (x < maxX - 1 && y < maxY - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y + 1][z], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y + 1][z], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (x < 2 && y < 2 && z < 2)
+				if (x < maxX - 1 && y < maxY - 1 && z < maxZ - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y + 1][z + 1], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y][z], blob[x + 1][y + 1][z + 1], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
-				if (x < 2 && y < 2 && z < 2)
+				if (x < maxX - 1 && y < maxY - 1 && z < maxZ - 1)
 				{
-					Physics::Spring *spring = new Physics::Spring(blob[x][y + 1][z], blob[x + 1][y][z + 1], 1.5, 200, 1);
+					Physics::Spring *spring = new Physics::Spring(blob[x][y + 1][z], blob[x + 1][y][z + 1], 2, stiffness, 1);
 					m_scene->AttachConstraint(spring);
 				}
 			}
 		}
 	}
+
+	Physics::PhysicsObject *obj = new Physics::PhysicsObject();
+	obj->SetPos(glm::vec3(0, 0, 0));
+	obj->SetCollider(new Physics::AABB(glm::vec3(2,2,2)));
+	m_scene->AttachObject(obj);
+
+	/*Physics::PhysicsObject *obj2 = new Physics::PhysicsObject();
+	obj2->SetPos(glm::vec3(0, 0, 0));
+	obj2->SetCollider(new Physics::AABB(glm::vec3(2, 2, 2)));
+	m_scene->AttachObject(obj2);*/
 
 	return true;
 }
@@ -185,12 +171,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
 
-	float force = 10;
-	//if (input->isKeyDown(aie::INPUT_KEY_LEFT))m_objectOne->ApplyForce(glm::vec3(-force, 0, 0));
-	//if (input->isKeyDown(aie::INPUT_KEY_RIGHT))m_objectOne->ApplyForce(glm::vec3(force, 0, 0));
-	//if (input->isKeyDown(aie::INPUT_KEY_UP))m_objectOne->ApplyForce(glm::vec3(0, force, 0));
-	//if (input->isKeyDown(aie::INPUT_KEY_DOWN))m_objectOne->ApplyForce(glm::vec3(0, -force, 0));
-
+	//Shoots a sphere
 	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT))
 	{
 		Physics::PhysicsObject *object = new Physics::PhysicsObject();
@@ -207,6 +188,9 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	
 	//Updates Scene Physics
 	m_scene->Update(deltaTime);
+
+	//Input Debug
+
 
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();

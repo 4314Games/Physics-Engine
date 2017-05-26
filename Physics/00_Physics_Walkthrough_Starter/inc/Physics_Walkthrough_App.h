@@ -20,7 +20,7 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
-	void RenderGizmosGrid();
+	void RenderGizmosGrid();	
 
 protected:
 
@@ -31,6 +31,7 @@ protected:
 	Physics::PhysicScene *m_scene;
 	Physics::PhysicsRenderer *m_renderer;
 
+	
 
 private:
 };

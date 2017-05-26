@@ -1,15 +1,16 @@
 #include "..\..\inc\Physics\Collider.h"
 #include "Physics\SphereCollider.h"
+#include "Physics\PhysicScene.h"
+#include "Physics\AABB.h"
+
 #include <glm\vec3.hpp>
 #include <glm\geometric.hpp>
-#include "Physics\PhysicScene.h"
 
 namespace Physics
 {
 	Collider::Collider(Type type) : m_type(type)
 	{
 	}
-
 
 	Collider::~Collider()
 	{
@@ -39,6 +40,15 @@ namespace Physics
 
 		return distance < colDistance;
 	}
+
+	bool AABBIntersects(AABB * objA, AABB * objB, IntersectData * intersect)
+	{
+		if (objA->SweptAABB(objA->GetBox(), objB->GetBox(), 0, 0, 0) != 1) return true;
+		else return false;
+
+	}
+
+	
 
 	
 }

@@ -13,7 +13,7 @@ namespace Physics
 		delete m_collider;
 	}
 
-	void PhysicsObject::Update(float deltaTime)
+	void PhysicsObject::Update(float deltaTime)		//Updates position, velocity and acceleration
 	{
 		ApplyForce(-m_velocity * m_friction);
 		m_velocity += m_acceleration * deltaTime;
@@ -22,7 +22,7 @@ namespace Physics
 		m_collider->Transform(this);
 	}
 
-	void PhysicsObject::ApplyForce(glm::vec3 p_force)
+	void PhysicsObject::ApplyForce(glm::vec3 p_force)		//Apply a force 
 	{
 		m_acceleration += p_force / m_mass;		
 	}
@@ -36,7 +36,7 @@ namespace Physics
 		return m_collider;
 	}
 
-	void PhysicsObject::SetCollider(Collider * p_collider)
+	void PhysicsObject::SetCollider(Collider * p_collider)		//Apply a collider type
 	{
 		//Clear memory for the old collider we owned
 		delete m_collider;

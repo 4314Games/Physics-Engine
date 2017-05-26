@@ -1,9 +1,11 @@
 #include "..\..\inc\Physics\PhysicScene.h"
 #include "Physics\PhysicsObject.h"
-#include <algorithm>
 #include "Physics\Collider.h"
-#include  <glm\geometric.hpp>
 #include "Physics\Constraint.h"
+
+
+#include <algorithm>
+#include  <glm\geometric.hpp>
 
 namespace Physics
 {
@@ -39,31 +41,27 @@ namespace Physics
 		for (auto iter = m_object.begin(); iter != m_object.end(); iter++)
 		{
 			PhysicsObject *obj = *iter;
-			//glm::vec3 currentAccel = obj->GetAcceleration();
-			//obj->SetAcceleration(gravAccel + currentAccel);
-			obj->ApplyForce(m_globalForce);
+			glm::vec3 currentAccel = obj->GetAcceleration();
+			obj->SetAcceleration(gravAccel + currentAccel);				//Update acceleration
+			obj->ApplyForce(m_globalForce);								//Applies Gravity
 			obj->Update(deltaTime);
 
-			// Super dodgy ground collision bouncing
-			// This will be replaced by proper collision detection and reaction later
-			//-------------------------------------------------------------
 			const glm::vec3 & pos = obj->GetPos();
 			const glm::vec3 & vel = obj->GetVelocity();
 
-			if (pos.y < 0.0f)
+			if (pos.y < 0.0f)											//Simulates floor collision
 			{
 				obj->SetPos(glm::vec3(pos.x, 0.0f, pos.z));
 				obj->SetVelocty(glm::vec3(vel.x, -vel.y, vel.z));
 			}
-
-			//-------------------------------------------------------------
-
 		}
+
 		m_globalForce = glm::vec3(); // option to turn off gravity each frame
 									 // which would mean you'd have to apply it
 									 // every frame
-		DetectCollision();
-		ResolveCollision();
+
+		DetectCollision();		//Run collision detection 
+		ResolveCollision();		//Act on collision detection
 	}
 
 	void Physics::PhysicScene::ApplyGlobalForce(const glm::vec3 & force)
@@ -71,7 +69,7 @@ namespace Physics
 		m_globalForce = force;
 	}
 
-	void Physics::PhysicScene::AttachObject(PhysicsObject * obj)
+	void Physics::PhysicScene::AttachObject(PhysicsObject * obj)		//Attach object to the scene
 	{
 		auto iter = std::find(m_object.begin(), m_object.end(), obj);
 		if (iter == m_object.end()) // object pointer is not already in our vector
@@ -80,7 +78,7 @@ namespace Physics
 		}
 	}
 
-	void Physics::PhysicScene::RemoveObject(PhysicsObject * obj)
+	void Physics::PhysicScene::RemoveObject(PhysicsObject * obj)		//Remove object from the scene
 	{
 		auto iter = std::find(m_object.begin(), m_object.end(), obj);
 		if (iter != m_object.end()) // object pointer is in our vector
@@ -90,15 +88,13 @@ namespace Physics
 		}
 	}
 
-	const std::vector<PhysicsObject*>& Physics::PhysicScene::GetObjects() const
+	const std::vector<PhysicsObject*>& Physics::PhysicScene::GetObjects() const		//Returns a vector of current object in scene
 	{
 		return m_object;
 	}
 
-	bool Physics::PhysicScene::isObjectColliding(PhysicsObject * obj)
+	bool Physics::PhysicScene::isObjectColliding(PhysicsObject * obj)				//Returns whether object is colliding
 	{
-		// MAP
-
 		// super inefficient searching . . . going to need to change this
 		for (auto iter = m_collision.begin(); iter != m_collision.end(); iter++)
 		{
@@ -108,18 +104,16 @@ namespace Physics
 		return false;
 	}
 
-	void PhysicScene::AttachConstraint(Constraint * con)
+	void PhysicScene::AttachConstraint(Constraint * con)							//Attach constraints to scene
 	{
 		auto iter = std::find(m_constraints.begin(), m_constraints.end(), con);
 		if (iter == m_constraints.end())
 		{
 			m_constraints.push_back(con);		
-		}
-
-		
+		}		
 	}
 
-	void PhysicScene::RemoveConstraint(Constraint * con)
+	void PhysicScene::RemoveConstraint(Constraint * con)							//Remove constraints from scene
 	{
 		auto iter = std::find(m_constraints.begin(), m_constraints.end(), con);
 		if (iter != m_constraints.end())
@@ -129,13 +123,12 @@ namespace Physics
 		}
 	}
 
-	const std::vector<Constraint*>& PhysicScene::GetConstraints() const
+	const std::vector<Constraint*>& PhysicScene::GetConstraints() const				//Return vector of constraints
 	{
-		// TODO: insert return statement here
 		return m_constraints;
 	}
 
-	void Physics::PhysicScene::DetectCollision()
+	void Physics::PhysicScene::DetectCollision()									//Detects collision between objects in scene and saves info as a struct in a vector
 	{
 		m_collision.clear(); // remove old collisions from previous frame
 
@@ -152,6 +145,7 @@ namespace Physics
 
 				CollisionInfo info;
 				// do the colliders of the two objects overlap?
+				
 				if (objA->GetCollider()->Intersects(objB->GetCollider(), &info.intersect))
 				{
 					info.objA = objA;
@@ -162,7 +156,7 @@ namespace Physics
 		}
 	}
 
-	void Physics::PhysicScene::ResolveCollision()
+	void Physics::PhysicScene::ResolveCollision()							//Resolves collisions using the collision info from the m_collision vector
 	{
 		// Loop through all collision pairs
 		for (auto iter = m_collision.begin(); iter != m_collision.end(); iter++)
